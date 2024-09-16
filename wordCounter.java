@@ -34,9 +34,7 @@ public class wordCounter {
                         map.put(word, temp);
                     }
                 }
-                int i = 0;
                 lineNumb++;
-
             }
             System.err.printf("%-15s%-15s%s", "word", "count", "line number\n");
             System.err.println("-------------------------------------------------");
