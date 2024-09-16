@@ -1,3 +1,4 @@
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.TreeMap;
 import java.io.File;
@@ -6,31 +7,42 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class wordCounter {
+
     public static void main(String[] args) {
         try {
             File inputFile = new File("alice.txt");
             Scanner reader = new Scanner(inputFile);
-            int lineNumb = 0;
-            TreeMap<String, Integer> map = new TreeMap<>();
+            int lineNumb = 1;
+            TreeMap<String, TreeSet<Integer>> map = new TreeMap<>();
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
                 ArrayList<String> lineArray = new ArrayList<>();
-                String[] badArray = line.split("[ \',-:().?!]");
+                String[] badArray = line.split("[ \',:().?!]");
                 for (String word : badArray) {
                     if (word != "") {
                         lineArray.add(word);
                     }
                 }
                 for (String word : lineArray) {
-                    if (map.get(word.toLowerCase()) == null) {
-                        map.put(word.toLowerCase(), 1);
+                    if (map.get(word) == null) {
+                        TreeSet<Integer> intSet = new TreeSet<>();
+                        intSet.add(lineNumb);
+                        map.put(word.toLowerCase(), intSet);
                     } else {
-                        map.put(word.toLowerCase(), map.get(word.toLowerCase()) + 1);
+                        TreeSet<Integer> temp = map.get(word);
+                        temp.add(lineNumb);
+                        map.put(word, temp);
                     }
                 }
+                int i = 0;
                 lineNumb++;
+
             }
-            System.err.println(map);
+            System.err.printf("%-15s%-15s%s", "word", "count", "line number\n");
+            System.err.println("-------------------------------------------------");
+            for (String key : map.keySet()) {
+                System.err.printf("%-15s%-15d%-15s\n", key, map.get(key).size(), map.get(key));
+            }
             reader.close();
         } catch (FileNotFoundException err) {
             System.out.println("File Not Found.");
